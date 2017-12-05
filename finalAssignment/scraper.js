@@ -1,5 +1,18 @@
 const cheerio = require('cheerio');
 const request = require('request');
+//Database requirements
+const express = require('express')
+const app = express();
+const bodyParser = require('body-parser');
+const knexConfig = require('./knexfile');
+const knex = require('knex')(knexConfig);
+const bookshelf = require('bookshelf')(knex);
+
+// Bookshelf model for current conditions.
+const CurrentCondition = bookshelf.Model.extend({
+    // tell it the name of the table
+    tableName: 'current_conditions',
+});
 
 //Google search results
 let url = "http://orca.bcferries.com:8080/cc/marqui/at-a-glance.asp";
@@ -13,6 +26,7 @@ request(url, function (error, response, body) {
         let sailingTswToSwb = '';
         let percentFullTswToSwb = '';
         let carWaitsTswToSwb = '';
+        let oversizeWaitsTswToSwb = '';
         let nextSailingTswToSwb = '';
         let nextPercentFullTswToSwb = '';
 
@@ -34,6 +48,10 @@ request(url, function (error, response, body) {
             carWaitsTswToSwb = ($(this).text())
         });
 
+        $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child(8) > tbody > tr:nth-child(2) > td:nth-child(4) > div').each(function () {
+            oversizeWaitsTswToSwb = ($(this).text())
+        });
+
         $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child(8) > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(2) > td:nth-child(1) > a').each(function () {
             nextSailingTswToSwb = ($(this).text())
         });
@@ -42,14 +60,28 @@ request(url, function (error, response, body) {
             nextPercentFullTswToSwb = ($(this).text())
         });
 
-        console.log("\nBC Ferries Data \n -----------------------------");
-        console.log(departureTswToSwb);
-        console.log(arrivalTswToSwb);
-        console.log(sailingTswToSwb);
-        console.log(percentFullTswToSwb);
-        console.log(carWaitsTswToSwb);
-        console.log(nextSailingTswToSwb);
-        console.log(nextPercentFullTswToSwb);
+        // console.log("\nBC Ferries Data \n -----------------------------");
+        // console.log(departureTswToSwb);
+        // console.log(arrivalTswToSwb);
+        // console.log(sailingTswToSwb);
+        // console.log(percentFullTswToSwb);
+        // console.log(carWaitsTswToSwb);
+        // console.log(oversizeWaitsTswToSwb);
+        // console.log(nextSailingTswToSwb);
+        // console.log(nextPercentFullTswToSwb);
+
+        const cond_1 = new CurrentCondition({
+            departure_terminal: departureTswToSwb,
+            arrival_terminal: arrivalTswToSwb,
+            departure_time: sailingTswToSwb,
+            percent_full: percentFullTswToSwb,
+            car_waits: carWaitsTswToSwb,
+            oversize_waits: oversizeWaitsTswToSwb
+        });
+
+        cond_1.save().then (conditions => {
+            console.log(conditions.attributes)
+        })
 
     } else {
         console.log("We've encountered an error: " + error);
