@@ -26,19 +26,19 @@ const CurrentCondition = bookshelf.Model.extend({
  });
 
  //----------------------- Create new current_condition -----------------------------------------')
- const cond_1 = new CurrentCondition({
-    departure_terminal: 'Tsawwassen',
-    arrival_terminal: 'Swartz Bay',
-    departure_time: '9:00 am',
-    percent_full: '10% full',
-    car_waits: 0,
-    oversize_waits: 0
+//  const cond_1 = new CurrentCondition({
+//     departure_terminal: 'Tsawwassen',
+//     arrival_terminal: 'Swartz Bay',
+//     departure_time: '9:00 am',
+//     percent_full: '10% full',
+//     car_waits: 0,
+//     oversize_waits: 0
 
-})
+// })
 
-cond_1.save().then (conditions => {
-   console.log(conditions.attributes)
-})
+// cond_1.save().then (conditions => {
+//    console.log(conditions.attributes)
+// })
 
 //Server listen function
 app.listen(8080, ()=>{

@@ -7,7 +7,9 @@ let url = "http://orca.bcferries.com:8080/cc/marqui/at-a-glance.asp";
 request(url, function (error, response, body) {
     if (!error) {
         let $ = cheerio.load(body);
-        let ferryRouteTswToSwb = '';
+        let ferryRouteTswToSwb = [];
+        let departureTswToSwb = '';
+        let arrivalTswToSwb = '';
         let sailingTswToSwb = '';
         let percentFullTswToSwb = '';
         let carWaitsTswToSwb = '';
@@ -15,7 +17,9 @@ request(url, function (error, response, body) {
         let nextPercentFullTswToSwb = '';
 
         $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child(8) > tbody > tr:nth-child(2) > td:nth-child(1)').each(function () {
-            ferryRouteTswToSwb = ($(this).text())
+            ferryRouteTswToSwb = ($(this).text()).split(' to ');
+            departureTswToSwb = ferryRouteTswToSwb[0];
+            arrivalTswToSwb = ferryRouteTswToSwb[1];
         });
 
         $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child(8) > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(1) > a').each(function () {
@@ -39,7 +43,8 @@ request(url, function (error, response, body) {
         });
 
         console.log("\nBC Ferries Data \n -----------------------------");
-        console.log(ferryRouteTswToSwb);
+        console.log(departureTswToSwb);
+        console.log(arrivalTswToSwb);
         console.log(sailingTswToSwb);
         console.log(percentFullTswToSwb);
         console.log(carWaitsTswToSwb);
