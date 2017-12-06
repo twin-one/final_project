@@ -8,6 +8,15 @@ const knexConfig = require('./knexfile');
 const knex = require('knex')(knexConfig);
 const bookshelf = require('bookshelf')(knex);
 
+//Bookshelf model for Sailings
+const Sailing = bookshelf.Model.extend({
+    tableName: 'sailings',
+    // specify relationships
+    current_condiditons: function() {
+        return this.hasMany(CurrentCondition);
+    }
+});
+
 // Bookshelf model for current conditions.
 const CurrentCondition = bookshelf
     .Model
@@ -111,9 +120,24 @@ sailingData = (tableNum) => {
 
             // loop the table numbers until you return an error
 
-            $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ (tableNum + 1) +') > tbody > tr').each(function () {
-                sailings.push($(this).text());
-            })
+            $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ (tableNum + 1) +') > tbody > tr').each(function (i) {
+                console.log(i)
+                if(i > 0) {
+                //console.log($(this).text())
+                sailings = $(this).text().split('\n');
+                sailings = sailings.map(sailing => {
+                    sailing = sailing.trim();
+                    return sailing;
+                });
+                sailings = sailings.filter(string => {
+                    return string !== '';
+                })
+                // sailings = sailings.filter(sailing => {
+                //     return sailing !== '\n'
+                // });
+                console.log(sailings)
+            };
+            });
 
             // $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ tableNum +') > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(1) > a').each(function () {
             //     sailing = ($(this).text())
@@ -128,7 +152,6 @@ sailingData = (tableNum) => {
             console.log(departure);
             console.log(arrival);
             console.log(date);
-            console.log(sailings);
 
             // cond_1.save().then(conditions => {
             //         console.log(conditions.attributes)
