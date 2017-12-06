@@ -83,10 +83,67 @@ ferryData = (tableNum) => {
     });
 }
 
-setInterval(getData => {
-    ferryData(8);
-    ferryData(13);
-    ferryData(23);
-    ferryData(28);
-}, 300000);
+sailingData = (tableNum) => {
+    let url = "http://orca.bcferries.com:8080/cc/marqui/actualDepartures.asp";
+    
+    request(url, function (error, response, body) {
+        if (!error) {
 
+            let $ = cheerio.load(body);
+            let ferryRoute = [];
+            let departure = '';
+            let arrival = '';
+            let date = ''
+            let sailings = [];
+        '#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child(6) > tbody > tr > td:nth-child(1) > span'
+
+            $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ tableNum +') > tbody > tr > td:nth-child(1) > span').each(function () {
+                ferryRoute = ($(this).text()).split('Sailing time:');
+                ferryRoute = ferryRoute[0].split(' to ');
+                departure = ferryRoute[0];
+                arrival = ferryRoute[1];
+            });
+
+            $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ tableNum +') > tbody > tr > td.titleSmInv > span').each(function () {
+                date = $(this).text();
+            });
+            
+
+            // loop the table numbers until you return an error
+
+            $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ (tableNum + 1) +') > tbody > tr').each(function () {
+                sailings.push($(this).text());
+            })
+
+            // $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ tableNum +') > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(1) > a').each(function () {
+            //     sailing = ($(this).text())
+            // });
+
+            // const cond_1 = new CurrentCondition({
+            //     departure_terminal:
+           
+            // });
+
+            console.log(ferryRoute);
+            console.log(departure);
+            console.log(arrival);
+            console.log(date);
+            console.log(sailings);
+
+            // cond_1.save().then(conditions => {
+            //         console.log(conditions.attributes)
+            //     });
+        } else {
+            console.log("We've encountered an error: " + error);
+        }
+    });
+}
+
+sailingData(6);
+
+// setInterval(getData => {
+//     ferryData(8);
+//     ferryData(13);
+//     ferryData(23);
+//     ferryData(28);
+// }, 300000);
