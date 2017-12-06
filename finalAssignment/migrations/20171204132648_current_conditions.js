@@ -4,10 +4,12 @@ exports.up = function(knex, Promise) {
         table.timestamp('created_at').notNullable().defaultTo(knex.fn.now());
         table.string('departure_terminal');
         table.string('arrival_terminal');
-        table.time('departure_time')
+        table.time('sailing_time')
         table.string('percent_full');
         table.integer('car_waits');
         table.integer('oversize_waits');
+        table.time('next_sailing_time');
+        table.string('next_percent_full')
     })
 };
 
