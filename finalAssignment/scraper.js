@@ -11,10 +11,6 @@ const bookshelf = require('bookshelf')(knex);
 //Bookshelf model for Sailings
 const Sailing = bookshelf.Model.extend({
     tableName: 'sailings',
-    // specify relationships
-    current_condiditons: function() {
-        return this.hasMany(CurrentCondition);
-    }
 });
 
 // Bookshelf model for current conditions.
@@ -25,7 +21,7 @@ const CurrentCondition = bookshelf
         tableName: 'current_conditions'
     });
 
-ferryData = (tableNum) => {
+conditionsData = (tableNum) => {
     let url = "http://orca.bcferries.com:8080/cc/marqui/at-a-glance.asp";
 
     request(url, function (error, response, body) {
@@ -121,7 +117,6 @@ sailingData = (tableNum) => {
             // loop the table numbers until you return an error
 
             $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ (tableNum + 1) +') > tbody > tr').each(function (i) {
-                console.log(i)
                 if(i > 0) {
                 //console.log($(this).text())
                 sailings = $(this).text().split('\n');
@@ -135,15 +130,40 @@ sailingData = (tableNum) => {
                 // sailings = sailings.filter(sailing => {
                 //     return sailing !== '\n'
                 // });
-                console.log(sailings)
                 const sailingData = new Sailing({
                     sailing_date: date,
                     departure_terminal: departure,
                     arrival_terminal: arrival,
                     sailing_time: sailings[1],
                     vessel: sailings[0],
+                    actual_departure: sailings[2],
+                    eta: sailings[3],
+                    status: sailings[4]
                 })
-                sailingData.save().then(console.log('Sailing Saved'))
+                
+                const sailingUpdate = {
+                    actual_departure: sailings[2],
+                    eta: sailings[3],
+                    status: sailings[4]
+                }
+                
+                Sailing.where({
+                        sailing_date: date,
+                        departure_terminal: departure,
+                        arrival_terminal: arrival,
+                        sailing_time: sailings[1],
+                        vessel: sailings[0],
+                    })
+                    .fetch()
+                    .then(sailing => {
+                        if (!sailing) {
+                            sailingData.save().then(console.log('Sailing Saved'))
+                        } else {
+                            new Sailing({id: sailing.attributes.id})
+                                .save(sailingUpdate, {patch: true})
+                                .then(console.log('sailing updated'))
+                        }
+                    })
             };
             });
 
@@ -153,11 +173,16 @@ sailingData = (tableNum) => {
     });
 }
 
-sailingData(6);
+setInterval(getData => {
+    sailingData(6);
+    sailingData(26);
+    sailingData(34);
+    sailingData(42);
+}, 900000)
 
-// setInterval(getData => {
-//     ferryData(8);
-//     ferryData(13);
-//     ferryData(23);
-//     ferryData(28);
-// }, 300000);
+setInterval(getData => {
+    conditionsData(8);
+    conditionsData(13);
+    conditionsData(23);
+    conditionsData(28);
+}, 300000);
