@@ -7,6 +7,9 @@ exports.up = function(knex, Promise) {
         table.string('departure_terminal').notNullable();
         table.string('arrival_terminal').notNullable();
         table.time('sailing_time').notNullable();
+        table.time('actual_departure');
+        table.time('eta');
+        table.string('status');
         table.string('vessel');
     })
 };

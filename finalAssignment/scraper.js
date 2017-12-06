@@ -136,26 +136,17 @@ sailingData = (tableNum) => {
                 //     return sailing !== '\n'
                 // });
                 console.log(sailings)
+                const sailingData = new Sailing({
+                    sailing_date: date,
+                    departure_terminal: departure,
+                    arrival_terminal: arrival,
+                    sailing_time: sailings[1],
+                    vessel: sailings[0],
+                })
+                sailingData.save().then(console.log('Sailing Saved'))
             };
             });
 
-            // $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ tableNum +') > tbody > tr:nth-child(2) > td:nth-child(2) > div > table > tbody > tr:nth-child(1) > td:nth-child(1) > a').each(function () {
-            //     sailing = ($(this).text())
-            // });
-
-            // const cond_1 = new CurrentCondition({
-            //     departure_terminal:
-           
-            // });
-
-            console.log(ferryRoute);
-            console.log(departure);
-            console.log(arrival);
-            console.log(date);
-
-            // cond_1.save().then(conditions => {
-            //         console.log(conditions.attributes)
-            //     });
         } else {
             console.log("We've encountered an error: " + error);
         }
