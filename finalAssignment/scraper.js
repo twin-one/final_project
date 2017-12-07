@@ -80,7 +80,7 @@ conditionsData = (tableNum) => {
             });
 
             cond_1.save().then(conditions => {
-                    console.log(conditions.attributes)
+                    console.log('Current conditions updated')
                 });
         } else {
             console.log("We've encountered an error: " + error);
