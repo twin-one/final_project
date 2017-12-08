@@ -41,6 +41,7 @@ const CurrentCondition = bookshelf.Model.extend({
     let todaysDate = moment(date).format('YYYY-MM-DD');
     let currentTime = moment(date).format('HH:mm');
     let ferrys = [];
+    console.log(currentTime)
     
     Sailing.where({
             departure_terminal: departure,
@@ -51,7 +52,7 @@ const CurrentCondition = bookshelf.Model.extend({
         .orderBy('sailing_time', 'DESC')
         .fetch()
         .then(ferrys => {
-                res.send(ferrys.attributes, currentTime);
+                res.send(ferrys.attributes);
             });
  });
 
