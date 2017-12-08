@@ -26,23 +26,21 @@ const CurrentCondition = bookshelf.Model.extend({
     //  }
  });
 
- app.use(bodyParser());
- 
- app.use((req, res, next) => {
-     res.header("Access-Control-Allow-Origin", "*");
-     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-     next();
- });
+app.use(bodyParser());
 
- app.get('/conditions/:departure/:arrival', (req, res) => {
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
+app.get('/conditions/:departure/:arrival', (req, res) => {
     let departure = req.params.departure.replace(/-/g, " ");
     let arrival = req.params.arrival.replace(/-/g, " "); 
     let date = new Date();
     let todaysDate = moment(date).format('YYYY-MM-DD');
     let currentTime = moment(date).format('HH:mm');
-    let ferrys = [];
-    console.log(currentTime)
-    
+
     Sailing.where({
             departure_terminal: departure,
             arrival_terminal: arrival,
@@ -52,9 +50,24 @@ const CurrentCondition = bookshelf.Model.extend({
         .orderBy('sailing_time', 'DESC')
         .fetch()
         .then(ferrys => {
-                res.send(ferrys.attributes);
-            });
- });
+                Sailing.where({
+                    departure_terminal: departure,
+                    arrival_terminal: arrival,
+                    sailing_date: todaysDate,
+                })
+                .where('sailing_time','>', currentTime)
+                .orderBy('sailing_time', 'ASC')
+                .fetchAll()
+                .then(ferrys2 => {
+                    console.log(typeof ferrys2);
+                    res.send({  
+                        current: ferrys.attributes,
+                        next: ferrys2.models[0],
+                        next_next: ferrys2.models[1]
+                    })
+                })
+    })        
+});
 
 //Server listen function
 app.listen(8080, ()=>{

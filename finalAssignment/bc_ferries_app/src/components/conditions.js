@@ -21,14 +21,14 @@ class Conditions extends Component {
                eta: ''
             },
             next_sailing: {
-                schedule_departure: '',
+                scheduled_departure: '',
                 percent_full: '',
                 car_wait: 0,
                 oversize_wait: 0,
                 vessel: '',
            },
            next_next_sailing: {
-                schedule_departure: '',
+                scheduled_departure: '',
                 percent_full: '',
                 car_wait: 0,
                 oversize_wait: 0,
@@ -45,12 +45,21 @@ class Conditions extends Component {
         axios.get(url)
             .then(response => {
                 let data = response.data;
+                console.log("Check out this data", data);
                 this.setState({
                     current_sailing: {
-                        scheduled_departure: data.sailing_time,
-                        actual_departure: data.actual_departure,
-                        vessel: data.vessel,
-                        eta: data.eta
+                        scheduled_departure: data.current.sailing_time,
+                        actual_departure: data.current.actual_departure,
+                        vessel: data.current.vessel,
+                        eta: data.current.eta
+                    }, 
+                    next_sailing: {
+                        scheduled_departure: data.next.sailing_time,
+                        vessel: data.next.vessel
+                    },
+                    next_next_sailing: {
+                        scheduled_departure: data.next_next.sailing_time,
+                        vessel: data.next_next.vessel
                     }
             });
         });
@@ -121,7 +130,7 @@ class Conditions extends Component {
                             <tbody>
                                 <tr>
                                     <th>Scheduled Departure:</th>
-                                    <td>9:00 AM</td>
+                                    <td>{this.state.next_sailing.scheduled_departure}</td>
                                 </tr>
                                 <tr>
                                     <th>Percent Full:</th>
@@ -137,7 +146,7 @@ class Conditions extends Component {
                                 </tr>
                                 <tr>    
                                     <th>Vessel:</th>
-                                    <td>Queen of Whatever</td>
+                                    <td>{this.state.next_sailing.vessel}</td>
                                 </tr>
                             </tbody>    
                         </table>
@@ -150,7 +159,7 @@ class Conditions extends Component {
                             <tbody>
                                 <tr>
                                     <th>Scheduled Departure:</th>
-                                    <td>9:00 AM</td>
+                                    <td>{this.state.next_next_sailing.scheduled_departure}</td>
                                 </tr>
                                 <tr>
                                     <th>Percent Full:</th>
@@ -166,7 +175,7 @@ class Conditions extends Component {
                                 </tr>
                                 <tr>    
                                     <th>Vessel:</th>
-                                    <td>Queen of Whatever</td>
+                                    <td>{this.state.next_next_sailing.vessel}</td>
                                 </tr>
                             </tbody>
                         </Table>
