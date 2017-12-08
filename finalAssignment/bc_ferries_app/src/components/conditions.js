@@ -7,20 +7,47 @@ class Conditions extends Component {
     constructor () {
         super ()
         this.state = {
-            route: 'Tsawwassen to Swartz Bay',
-            update: '9:04 AM',
-            sailing: '10:00 AM',
-            percent_full: '34%',
-            next_sailing: '12:00 PM',
-            next_percent_full: '12%'
+            update: '',
+            current_sailing: {
+               departure_terminal: '',
+               arrival_terminal: '',
+               schedule_departure: '',
+               actual_departure: '',
+               percent_full: '',
+               car_wait: 0,
+               oversize_wait: 0,
+               vessel: '',
+               eta: ''
+            },
+            next_sailing: {
+                schedule_departure: '',
+                percent_full: '',
+                car_wait: 0,
+                oversize_wait: 0,
+                vessel: '',
+           },
+           next_next_sailing: {
+                schedule_departure: '',
+                percent_full: '',
+                car_wait: 0,
+                oversize_wait: 0,
+                vessel: '',
+           }
         }
     }
 
     setDate = () => {
         let date = new Date();
         let todaysDate = Moment(date).format('YYYY-MM-DD HH:mm');
-        console.log(todaysDate);
+        this.setState({
+            update: todaysDate
+        })
+
     }
+
+    componentWillMount() {
+        this.setDate();
+    };
 
     render() {
         return(

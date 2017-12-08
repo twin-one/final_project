@@ -40,20 +40,19 @@ const CurrentCondition = bookshelf.Model.extend({
     let date = new Date();
     let todaysDate = moment(date).format('YYYY-MM-DD');
     let currentTime = moment(date).format('HH:mm');
+    let ferrys = [];
     
     Sailing.where({
             departure_terminal: departure,
             arrival_terminal: arrival,
-            sailing_date: '2017-12-07'
+            sailing_date: todaysDate,
         })
-        .orderBy('sailing_time', 'ASC')
-        .fetchAll()
-        .then(result => {
-            const ferrys = result.models.map(ferrys => {
-                return ferrys.attributes;
+        .where('sailing_time','<', currentTime)
+        .orderBy('sailing_time', 'DESC')
+        .fetch()
+        .then(ferrys => {
+                res.send(ferrys.attributes, currentTime);
             });
-            res.send(ferrys);
-        });
  });
 
 //Server listen function
