@@ -9,6 +9,7 @@
     "cheerio": "^1.0.0-rc.2",
     "express": "^4.16.2",
     "knex": "^0.14.2",
+    "moment": "^2.19.3",
     "pg": "^7.4.0",
     "react-materialize": "^1.1.0",
     "request": "^2.83.0"

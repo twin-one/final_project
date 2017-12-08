@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const knexConfig = require('./knexfile');
 const knex = require('knex')(knexConfig);
 const bookshelf = require('bookshelf')(knex);
+const moment = require('moment')
 
 // create a bookshelf model for authors
 const Sailing = bookshelf.Model.extend({
@@ -25,7 +26,35 @@ const CurrentCondition = bookshelf.Model.extend({
     //  }
  });
 
+ app.use(bodyParser());
+ 
+ app.use((req, res, next) => {
+     res.header("Access-Control-Allow-Origin", "*");
+     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+     next();
+ });
 
+ app.get('/conditions/:departure/:arrival', (req, res) => {
+    let departure = req.params.departure.replace(/-/g, " ");
+    let arrival = req.params.arrival.replace(/-/g, " "); 
+    let date = new Date();
+    let todaysDate = moment(date).format('YYYY-MM-DD');
+    let currentTime = moment(date).format('HH:mm');
+    
+    Sailing.where({
+            departure_terminal: departure,
+            arrival_terminal: arrival,
+            sailing_date: '2017-12-07'
+        })
+        .orderBy('sailing_time', 'ASC')
+        .fetchAll()
+        .then(result => {
+            const ferrys = result.models.map(ferrys => {
+                return ferrys.attributes;
+            });
+            res.send(ferrys);
+        });
+ });
 
 //Server listen function
 app.listen(8080, ()=>{
