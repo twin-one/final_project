@@ -50,23 +50,53 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
         .orderBy('sailing_time', 'DESC')
         .fetch()
         .then(ferrys => {
-                Sailing.where({
+            Sailing.where({
+                departure_terminal: departure,
+                arrival_terminal: arrival,
+                sailing_date: todaysDate,
+            })
+            .where('sailing_time','>', currentTime)
+            .orderBy('sailing_time', 'ASC')
+            .fetchAll()
+            .then(ferrys2 => {
+                CurrentCondition.where({
                     departure_terminal: departure,
                     arrival_terminal: arrival,
-                    sailing_date: todaysDate,
+                    sailing_time: ferrys.attributes.sailing_time
                 })
-                .where('sailing_time','>', currentTime)
-                .orderBy('sailing_time', 'ASC')
-                .fetchAll()
-                .then(ferrys2 => {
-                    console.log(typeof ferrys2);
-                    res.send({  
-                        current: ferrys.attributes,
-                        next: ferrys2.models[0],
-                        next_next: ferrys2.models[1]
+                .orderBy('created_at', 'DESC')
+                .fetch()
+                .then(ferrys3 => {
+                    CurrentCondition.where({
+                        departure_terminal: departure,
+                        arrival_terminal: arrival,
+                        sailing_time: ferrys2.models[0].attributes.sailing_time
+                    })
+                    .orderBy('created_at', 'DESC')
+                    .fetch()
+                    .then(ferrys4 => {
+                        CurrentCondition.where({
+                            departure_terminal: departure,
+                            arrival_terminal: arrival,
+                            sailing_time: ferrys2.models[1].attributes.sailing_time
+                        })
+                        .orderBy('created_at', 'DESC')
+                        .fetch()
+                        .then(ferrys5 => {
+                            console.log(ferrys3.attributes)
+                            console.log(ferrys4.attributes)
+                            res.send({  
+                                current: ferrys.attributes,
+                                next: ferrys2.models[0],
+                                next_next: ferrys2.models[1],
+                                current_cond: ferrys3.attributes,
+                                next_cond: ferrys4.attributes,
+                            })
+                        })    
                     })
                 })
-    })        
+            })
+        })        
 });
 
 //Server listen function

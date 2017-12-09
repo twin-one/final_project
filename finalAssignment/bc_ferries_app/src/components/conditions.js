@@ -50,11 +50,17 @@ class Conditions extends Component {
                     current_sailing: {
                         scheduled_departure: data.current.sailing_time,
                         actual_departure: data.current.actual_departure,
+                        percent_full: data.current_cond.percent_full,
+                        car_wait: data.current_cond.car_waits,
+                        oversize_wait: data.current_cond.oversize_waits,
                         vessel: data.current.vessel,
                         eta: data.current.eta
                     }, 
                     next_sailing: {
                         scheduled_departure: data.next.sailing_time,
+                        percent_full: data.next_cond.percent_full,
+                        car_wait: data.next_cond.car_waits,
+                        oversize_wait: data.next_cond.oversize_waits,
                         vessel: data.next.vessel
                     },
                     next_next_sailing: {
@@ -101,15 +107,15 @@ class Conditions extends Component {
                                 </tr>
                                 <tr>
                                     <th>Percent Full:</th>
-                                    <td>87%</td>
+                                    <td>{this.state.current_sailing.percent_full}</td>
                                 </tr>
                                 <tr>
                                     <th>Car Wait:</th>
-                                    <td>0</td> 
+                                    <td>{this.state.current_sailing.car_wait}</td> 
                                 </tr>
                                 <tr>
                                     <th>Oversize Wait:</th>
-                                    <td>0</td> 
+                                    <td>{this.state.current_sailing.oversize_wait}</td> 
                                 </tr>
                                 <tr>    
                                     <th>Vessel:</th>
