@@ -12,27 +12,27 @@ class Conditions extends Component {
             departure_terminal: 'Tsawwassen',
             arrival_terminal: 'Swartz Bay',
             current_sailing: {
-               scheduled_departure: '',
-               actual_departure: '',
-               percent_full: '',
-               car_wait: 0,
-               oversize_wait: 0,
-               vessel: '',
-               eta: ''
+               scheduled_departure: 'Error',
+               actual_departure: 'Error',
+               percent_full: 'Error',
+               car_wait: 'Error',
+               oversize_wait: 'Error',
+               vessel: 'Error',
+               eta: 'Error'
             },
             next_sailing: {
-                scheduled_departure: '',
-                percent_full: '',
-                car_wait: 0,
-                oversize_wait: 0,
-                vessel: '',
+                scheduled_departure: 'Error',
+                percent_full: 'Error',
+                car_wait: 'Error',
+                oversize_wait: 'Error',
+                vessel: 'Error',
            },
            next_next_sailing: {
-                scheduled_departure: '',
-                percent_full: '',
-                car_wait: 0,
-                oversize_wait: 0,
-                vessel: '',
+                scheduled_departure: 'Error',
+                percent_full: 'Error',
+                car_wait: 'Error',
+                oversize_wait: 'Error',
+                vessel: 'Error',
            }
         }
     }
@@ -65,6 +65,7 @@ class Conditions extends Component {
                     },
                     next_next_sailing: {
                         scheduled_departure: data.next_next.sailing_time,
+                        percent_full: data.next_cond.percent_full,
                         vessel: data.next_next.vessel
                     }
             });
@@ -89,8 +90,8 @@ class Conditions extends Component {
         return(
             <div>
                 <Col s={8} offset='s2'>
-                    <h3>{this.state.departure_terminal} to {this.state.arrival_terminal}</h3>
-                    <Link to='/' className="waves-effect waves-light btn terminalButton">Back To Routes</Link>
+                        <h3>{this.state.departure_terminal} to {this.state.arrival_terminal}</h3>
+                        <Link to='/' className="waves-effect waves-light btn terminalButton">Back To Routes</Link>
                     <div className='card'>
                         <h5>Current Sailing</h5>
                         <p>Last Update: {this.state.update}</p>
@@ -140,15 +141,15 @@ class Conditions extends Component {
                                 </tr>
                                 <tr>
                                     <th>Percent Full:</th>
-                                    <td>87%</td>
+                                    <td>{this.state.next_sailing.percent_full}</td>
                                 </tr>
                                 <tr>
                                     <th>Car Wait:</th>
-                                    <td>0</td> 
+                                    <td>{this.state.next_sailing.car_wait}</td> 
                                 </tr>
                                 <tr>
                                     <th>Oversize Wait:</th>
-                                    <td>0</td> 
+                                    <td>{this.state.next_sailing.oversize_wait}</td> 
                                 </tr>
                                 <tr>    
                                     <th>Vessel:</th>
@@ -169,15 +170,7 @@ class Conditions extends Component {
                                 </tr>
                                 <tr>
                                     <th>Percent Full:</th>
-                                    <td>87%</td>
-                                </tr>
-                                <tr>
-                                    <th>Car Wait:</th>
-                                    <td>0</td> 
-                                </tr>
-                                <tr>
-                                    <th>Oversize Wait:</th>
-                                    <td>0</td> 
+                                    <td>{this.state.next_next_sailing.percent_full}</td>
                                 </tr>
                                 <tr>    
                                     <th>Vessel:</th>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Navbar, Row, Col, Button} from 'react-materialize';
+import {Navbar, Row, Col, Button, NavItem} from 'react-materialize';
 import {Route} from 'react-router-dom';
 import FerryRoutes from './components/ferryRoutes';
 import Conditions from './components/conditions';
@@ -12,6 +12,8 @@ class App extends Component {
       <div>
         <Row>
           <Navbar brand='BC Ferries App' right>
+            <NavItem>About</NavItem>
+            <NavItem>Routes</NavItem>
           </Navbar>
           <Route exact path='/' render={() => <FerryRoutes/>}/>
           <Route path='/conditions' render={() => <Conditions/>}/>

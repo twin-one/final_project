@@ -41,6 +41,8 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
     let todaysDate = moment(date).format('YYYY-MM-DD');
     let currentTime = moment(date).format('HH:mm');
 
+    /* This statement finds all sailings with the terminals specified on todays date, that happen before the current time
+    it then lists them sailing time, in descending order and returns the first result which is the sailing currently under way.*/
     Sailing.where({
             departure_terminal: departure,
             arrival_terminal: arrival,
@@ -49,7 +51,9 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
         .where('sailing_time','<', currentTime)
         .orderBy('sailing_time', 'DESC')
         .fetch()
-        .then(ferrys => {
+        .then(currentFerry => {
+            if (currentFerry) {
+            // Then we find all the ferry sailings that occur today after the current time.
             Sailing.where({
                 departure_terminal: departure,
                 arrival_terminal: arrival,
@@ -58,44 +62,44 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
             .where('sailing_time','>', currentTime)
             .orderBy('sailing_time', 'ASC')
             .fetchAll()
-            .then(ferrys2 => {
+            .then(followingFerries => {
+                if (followingFerries) {
+                // Now for the ferry sailing currently, we query the current conditions database for last updated. 
                 CurrentCondition.where({
                     departure_terminal: departure,
                     arrival_terminal: arrival,
-                    sailing_time: ferrys.attributes.sailing_time
+                    sailing_time: currentFerry.attributes.sailing_time
                 })
                 .orderBy('created_at', 'DESC')
                 .fetch()
-                .then(ferrys3 => {
+                .then(currentFerryConditions => {
+                    if (currentFerryConditions) { 
+                    // Then we query the current conditions database for the last updated conditions on the next ferry, which contains information on the following ferry.
                     CurrentCondition.where({
                         departure_terminal: departure,
                         arrival_terminal: arrival,
-                        sailing_time: ferrys2.models[0].attributes.sailing_time
+                        sailing_time: followingFerries.models[0].attributes.sailing_time
                     })
                     .orderBy('created_at', 'DESC')
                     .fetch()
-                    .then(ferrys4 => {
-                        CurrentCondition.where({
-                            departure_terminal: departure,
-                            arrival_terminal: arrival,
-                            sailing_time: ferrys2.models[1].attributes.sailing_time
+                    .then(nextFerryConditions => {
+                        res.send({  
+                            current: currentFerry.attributes,
+                            next: followingFerries.models[0],
+                            next_next: followingFerries.models[1],
+                            current_cond: currentFerryConditions.attributes,
+                            next_cond: nextFerryConditions.attributes,
                         })
-                        .orderBy('created_at', 'DESC')
-                        .fetch()
-                        .then(ferrys5 => {
-                            console.log(ferrys3.attributes)
-                            console.log(ferrys4.attributes)
-                            res.send({  
-                                current: ferrys.attributes,
-                                next: ferrys2.models[0],
-                                next_next: ferrys2.models[1],
-                                current_cond: ferrys3.attributes,
-                                next_cond: ferrys4.attributes,
-                            })
-                        })    
-                    })
-                })
-            })
+           
+                    })} else {
+                        console.log('Error currentFerryConditions')
+                    }
+                })} else {
+                    console.log('Error followingFerries')
+                }
+            })} else {
+                console.log('Error Ferry')
+            }
         })        
 });
 

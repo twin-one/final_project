@@ -127,9 +127,7 @@ sailingData = (tableNum) => {
                 sailings = sailings.filter(string => {
                     return string !== '';
                 })
-                // sailings = sailings.filter(sailing => {
-                //     return sailing !== '\n'
-                // });
+
                 const sailingData = new Sailing({
                     sailing_date: date,
                     departure_terminal: departure,
@@ -173,16 +171,18 @@ sailingData = (tableNum) => {
     });
 }
 
-setInterval(getData => {
-    sailingData(6);
-    sailingData(26);
-    sailingData(34);
-    sailingData(42);
-}, 900000)
+// setInterval(getData => {
+//     sailingData(6);
+//     sailingData(26);
+//     sailingData(34);
+//     sailingData(42);
+// }, 300000)
 
-setInterval(getData => {
-    conditionsData(8);
-    conditionsData(13);
-    conditionsData(23);
-    conditionsData(28);
-}, 300000);
+// setInterval(getData => {
+//     conditionsData(8);
+//     conditionsData(13);
+//     conditionsData(23);
+//     conditionsData(28);
+// }, 300000);
+
+sailingData(6);
