@@ -83,7 +83,6 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
                 .fetch()
                 .then(currentFerryConditions => {
                     result.current_cond = currentFerryConditions
-                    console.log(followingFerries.models[0].attributes.sailing_time)
                     // Then we query the current conditions database for the last updated conditions on the next ferry, which contains information on the following ferry.
                     CurrentCondition.where({
                         departure_terminal: departure,
@@ -96,7 +95,6 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
                         result.next_cond = nextFerryConditions.attributes
                     })
                     .then(sendData => {
-                        //console.log('New results: \n' + result)
                         res.send(result)
                     })
                 })

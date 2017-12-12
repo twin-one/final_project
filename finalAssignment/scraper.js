@@ -117,50 +117,71 @@ sailingData = (tableNum) => {
 
             $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ (tableNum + 1) +') > tbody > tr').each(function (i) {
                 if(i > 0) {
-                //console.log($(this).text())
-                sailings = $(this).text().split('\n');
-                sailings = sailings.map(sailing => {
-                    sailing = sailing.trim();
-                    return sailing;
-                });
-                sailings = sailings.filter(string => {
-                    return string !== '';
-                })
+                    //console.log($(this).text())
+                    sailings = $(this).text().split('\n');
+                    sailings = sailings.map(sailing => {
+                        sailing = sailing.trim();
+                        return sailing;
+                    });
+                    sailings = sailings.filter(string => {
+                        return string !== '';
+                    })
 
-                const sailingData = new Sailing({
-                    sailing_date: date,
-                    departure_terminal: departure,
-                    arrival_terminal: arrival,
-                    sailing_time: sailings[1],
-                    vessel: sailings[0],
-                    actual_departure: sailings[2],
-                    eta: sailings[3],
-                    status: sailings[4]
-                })
-                
-                const sailingUpdate = {
-                    actual_departure: sailings[2],
-                    eta: sailings[3],
-                    status: sailings[4]
-                }
-                
-                Sailing.where({
+                    if (sailings[2] === 'Cancelled') {
+                        sailings[2] = null;
+                        sailings[4] = 'Cancelled'
+                    }
+
+                    const sailingData = new Sailing({
                         sailing_date: date,
                         departure_terminal: departure,
                         arrival_terminal: arrival,
                         sailing_time: sailings[1],
                         vessel: sailings[0],
+                        actual_departure: sailings[2],
+                        eta: sailings[3],
+                        status: sailings[4]
                     })
-                    .fetch()
-                    .then(sailing => {
-                        if (!sailing) {
-                            sailingData.save().then(console.log('Sailing Saved'))
-                        } else {
-                            new Sailing({id: sailing.attributes.id})
-                                .save(sailingUpdate, {patch: true})
+                    
+                    const sailingUpdate = {
+                        actual_departure: sailings[2] || null,
+                        eta: sailings[3] || null,
+                        status: sailings[4] || null
+                    }
+
+                    // console.log(date)
+                    // console.log(departure)
+                    // console.log(arrival)
+                    // console.log(sailings[1])
+                    // console.log(sailings[0])
+
+                    Sailing.where({
+                            sailing_date: date,
+                            departure_terminal: departure,
+                            arrival_terminal: arrival,
+                            sailing_time: sailings[1],
+                            vessel: sailings[0],
+                        })
+                        .fetch()
+                        .then(sailing => {
+                            if (!sailing) {
+                                sailingData.save()
+                                .then(console.log('Sailing Saved from: ' + departure))
+                                .catch(error => {
+                                    console.log("1", error)
+                                })
+                            } else {
+                                new Sailing({id: sailing.attributes.id})
+                                    .save(sailingUpdate, {patch: true})
                                 .then(console.log('sailing from: ' + departure +' updated'))
-                        }
-                    })
+                                .catch(error => {
+                                    console.log("2", error)
+                                })
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
                 };
             });
 
@@ -170,22 +191,22 @@ sailingData = (tableNum) => {
     });
 }
 
-sailingData(6);
-sailingData(26);
-sailingData(34);
+// sailingData(6);
+// sailingData(26);
+// sailingData(34);
 sailingData(42);
-conditionsData(8);
-conditionsData(13);
-conditionsData(23);
-conditionsData(28);
+// conditionsData(8);
+// conditionsData(13);
+// conditionsData(23);
+// conditionsData(28);
 
-setInterval(getData => {
-    sailingData(6);
-    sailingData(26);
-    sailingData(34);
-    sailingData(42);
-    conditionsData(8);
-    conditionsData(13);
-    conditionsData(23);
-    conditionsData(28);
-}, 300000)
+// setInterval(getData => {
+//     sailingData(6);
+//     sailingData(26);
+//     sailingData(34);
+//     sailingData(42);
+//     conditionsData(8);
+//     conditionsData(13);
+//     conditionsData(23);
+//     conditionsData(28);
+// }, 300000)
