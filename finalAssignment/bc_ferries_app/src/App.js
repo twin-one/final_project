@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import {Navbar, Row, Col, Button, NavItem} from 'react-materialize';
+import {Navbar, Row, NavItem} from 'react-materialize';
 import {Route} from 'react-router-dom';
 import FerryRoutes from './components/ferryRoutes';
 import Conditions from './components/conditions';

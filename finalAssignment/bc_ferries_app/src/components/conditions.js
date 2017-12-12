@@ -38,6 +38,7 @@ class Conditions extends Component {
     }
 
     getCurrentSailingData = () => {
+        console.log('Getting Started')
         let arrivalHyphenated = this.state.arrival_terminal.replace(" ", "-");
         let departureHyphenated = this.state.departure_terminal.replace(" ", '-');
         let url = `http://localhost:8080/conditions/${departureHyphenated}/${arrivalHyphenated}`
@@ -87,7 +88,6 @@ class Conditions extends Component {
             departure_terminal: this.props.match.params.departure,
             arrival_terminal: this.props.match.params.arrival
         })
-        console.log(this.props);
     }
 
     componentWillMount() {

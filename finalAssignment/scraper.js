@@ -100,7 +100,6 @@ sailingData = (tableNum) => {
             let arrival = '';
             let date = ''
             let sailings = [];
-        '#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child(6) > tbody > tr > td:nth-child(1) > span'
 
             $('#tblLayout > tbody > tr > td > table > tbody > tr > td > table:nth-child('+ tableNum +') > tbody > tr > td:nth-child(1) > span').each(function () {
                 ferryRoute = ($(this).text()).split('Sailing time:');
