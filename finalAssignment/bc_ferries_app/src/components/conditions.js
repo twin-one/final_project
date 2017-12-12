@@ -9,8 +9,8 @@ class Conditions extends Component {
         super ()
         this.state = {
             update: '',
-            departure_terminal: 'Tsawwassen',
-            arrival_terminal: 'Swartz Bay',
+            departure_terminal: 'Loading',
+            arrival_terminal: 'Loading',
             current_sailing: {
                scheduled_departure: 'Error',
                actual_departure: 'Error',
@@ -40,7 +40,7 @@ class Conditions extends Component {
     getCurrentSailingData = () => {
         let arrivalHyphenated = this.state.arrival_terminal.replace(" ", "-");
         let departureHyphenated = this.state.departure_terminal.replace(" ", '-');
-        let url = `http://localhost:8080/conditions/${arrivalHyphenated}/${departureHyphenated}`
+        let url = `http://localhost:8080/conditions/${departureHyphenated}/${arrivalHyphenated}`
 
         axios.get(url)
             .then(response => {
@@ -54,7 +54,9 @@ class Conditions extends Component {
                         car_wait: data.current_cond.car_waits,
                         oversize_wait: data.current_cond.oversize_waits,
                         vessel: data.current.vessel,
-                        eta: data.current.eta
+                        eta: data.current.eta,
+                        status: data.current.status,
+                        updated_at: data.current.updated_at
                     }, 
                     next_sailing: {
                         scheduled_departure: data.next.sailing_time,
@@ -65,7 +67,7 @@ class Conditions extends Component {
                     },
                     next_next_sailing: {
                         scheduled_departure: data.next_next.sailing_time,
-                        percent_full: data.next_cond.percent_full,
+                        percent_full: data.next_cond.next_percent_full,
                         vessel: data.next_next.vessel
                     }
             });
@@ -78,13 +80,24 @@ class Conditions extends Component {
         this.setState({
             update: todaysDate
         })
+    }
 
+    setRoute = () => {
+        this.setState({
+            departure_terminal: this.props.match.params.departure,
+            arrival_terminal: this.props.match.params.arrival
+        })
+        console.log(this.props);
     }
 
     componentWillMount() {
         this.setDate();
-        this.getCurrentSailingData();
+        this.setRoute()
     };
+
+    componentDidMount() {
+        this.getCurrentSailingData()
+    }
 
     render() {
         return(
@@ -94,7 +107,8 @@ class Conditions extends Component {
                         <Link to='/' className="waves-effect waves-light btn terminalButton">Back To Routes</Link>
                     <div className='card'>
                         <h5>Current Sailing</h5>
-                        <p>Last Update: {this.state.update}</p>
+                        <p>Last Refresh: {this.state.update}</p>
+                        <p>Last Updated: {this.state.current_sailing.updated_at}</p>
                         <hr/>
                         <table className='striped'>
                             <tbody>
@@ -125,6 +139,10 @@ class Conditions extends Component {
                                 <tr>
                                     <th>ETA:</th>
                                     <td>{this.state.current_sailing.eta}</td>  
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>{this.state.current_sailing.status}</td>  
                                 </tr>
                             </tbody>    
                         </table>

@@ -16,7 +16,7 @@ class App extends Component {
             <NavItem>Routes</NavItem>
           </Navbar>
           <Route exact path='/' render={() => <FerryRoutes/>}/>
-          <Route path='/conditions' render={() => <Conditions/>}/>
+          <Route path='/conditions/:departure/:arrival' render={(props) => <Conditions {...props}/>}/>
         </Row>
       </div>
     );

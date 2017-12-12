@@ -80,7 +80,7 @@ conditionsData = (tableNum) => {
             });
 
             cond_1.save().then(conditions => {
-                    console.log('Current conditions updated')
+                    console.log('Current conditions: ' + departure +' updated')
                 });
         } else {
             console.log("We've encountered an error: " + error);
@@ -159,10 +159,10 @@ sailingData = (tableNum) => {
                         } else {
                             new Sailing({id: sailing.attributes.id})
                                 .save(sailingUpdate, {patch: true})
-                                .then(console.log('sailing updated'))
+                                .then(console.log('sailing from: ' + departure +' updated'))
                         }
                     })
-            };
+                };
             });
 
         } else {
@@ -171,18 +171,22 @@ sailingData = (tableNum) => {
     });
 }
 
-// setInterval(getData => {
-//     sailingData(6);
-//     sailingData(26);
-//     sailingData(34);
-//     sailingData(42);
-// }, 300000)
-
-// setInterval(getData => {
-//     conditionsData(8);
-//     conditionsData(13);
-//     conditionsData(23);
-//     conditionsData(28);
-// }, 300000);
-
 sailingData(6);
+sailingData(26);
+sailingData(34);
+sailingData(42);
+conditionsData(8);
+conditionsData(13);
+conditionsData(23);
+conditionsData(28);
+
+setInterval(getData => {
+    sailingData(6);
+    sailingData(26);
+    sailingData(34);
+    sailingData(42);
+    conditionsData(8);
+    conditionsData(13);
+    conditionsData(23);
+    conditionsData(28);
+}, 300000)
