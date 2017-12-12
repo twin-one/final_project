@@ -41,6 +41,14 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
     let todaysDate = moment(date).format('YYYY-MM-DD');
     let currentTime = moment(date).format('HH:mm');
 
+    let result = {  
+        current: null,
+        next: null,
+        next_next: null,
+        current_cond: null,
+        next_cond: null
+    }
+
     /* This statement finds all sailings with the terminals specified on todays date, that happen before the current time
     it then lists them sailing time, in descending order and returns the first result which is the sailing currently under way.*/
     Sailing.where({
@@ -52,7 +60,7 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
         .orderBy('sailing_time', 'DESC')
         .fetch()
         .then(currentFerry => {
-            if (currentFerry) {
+            result.current = currentFerry.attributes || null;
             // Then we find all the ferry sailings that occur today after the current time.
             Sailing.where({
                 departure_terminal: departure,
@@ -63,7 +71,8 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
             .orderBy('sailing_time', 'ASC')
             .fetchAll()
             .then(followingFerries => {
-                if (followingFerries) {
+                result.next = followingFerries.models[0].attributes || null;
+                result.next_next = followingFerries.models[1].attributes || null;
                 // Now for the ferry sailing currently, we query the current conditions database for last updated. 
                 CurrentCondition.where({
                     departure_terminal: departure,
@@ -73,7 +82,8 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
                 .orderBy('created_at', 'DESC')
                 .fetch()
                 .then(currentFerryConditions => {
-                    if (currentFerryConditions) { 
+                    result.current_cond = currentFerryConditions
+                    console.log(followingFerries.models[0].attributes.sailing_time)
                     // Then we query the current conditions database for the last updated conditions on the next ferry, which contains information on the following ferry.
                     CurrentCondition.where({
                         departure_terminal: departure,
@@ -83,23 +93,14 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
                     .orderBy('created_at', 'DESC')
                     .fetch()
                     .then(nextFerryConditions => {
-                        res.send({  
-                            current: currentFerry.attributes,
-                            next: followingFerries.models[0],
-                            next_next: followingFerries.models[1],
-                            current_cond: currentFerryConditions.attributes,
-                            next_cond: nextFerryConditions.attributes,
-                        })
-           
-                    })} else {
-                        console.log('Error currentFerryConditions')
-                    }
-                })} else {
-                    console.log('Error followingFerries')
-                }
-            })} else {
-                console.log('Error Ferry')
-            }
+                        result.next_cond = nextFerryConditions.attributes
+                    })
+                    .then(sendData => {
+                        //console.log('New results: \n' + result)
+                        res.send(result)
+                    })
+                })
+            })
         })        
 });
 

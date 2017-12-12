@@ -38,7 +38,6 @@ class Conditions extends Component {
     }
 
     getCurrentSailingData = () => {
-        console.log('Getting Started')
         let arrivalHyphenated = this.state.arrival_terminal.replace(" ", "-");
         let departureHyphenated = this.state.departure_terminal.replace(" ", '-');
         let url = `http://localhost:8080/conditions/${departureHyphenated}/${arrivalHyphenated}`
@@ -47,29 +46,50 @@ class Conditions extends Component {
             .then(response => {
                 let data = response.data;
                 console.log("Check out this data", data);
+                
+                let currentScheduledDeparture = data.current ? data.current.sailing_time : 'Not Found';
+                let currentActualDeparture = data.current ? data.current.actual_departure : 'Not Found';
+                let currentPercentFull = data.current_cond ? data.current_cond.percent_full : 'Not Found';
+                let currentCarWait = data.current_cond ? data.current_cond.car_waits : 'Not Found';
+                let currentOversizeWait = data.current_cond ? data.current_cond.oversize_waits : 'Not Found';
+                let currentVessel = data.current ? data.current.vessel : 'Not Found';
+                let currentEta = data.current ? data.current.eta : 'Not Found';
+                let currentStatus = data.current ? data.current.status : 'Not Found';
+                let currentUpdatedAt = data.current ? data.current.updated_at : 'Not Found';
+
+                let nextScheduledDeparture = data.next ? data.next.sailing_time : 'Not Found';
+                let nextPercentFull = data.next_cond ? data.next_cond.percent_full : 'Not Found';
+                let nextCarWait = data.next_cond ? data.next_cond.car_waits : 'Not Found';
+                let nextOversizeWait = data.next_cond ? data.next_cond.oversize_waits : 'Not Found';
+                let nextVessel = data.next ? data.next.vessel : 'Not Found';
+
+                let nextNextScheduledDeparture = data.next_next ? data.next_next.sailing_time : 'Not Found';
+                let nextNextPercentFull = data.next_cond ? data.next_cond.next_percent_full : 'Not Found';
+                let nextNextVessel = data.next_next ? data.next_next.vessel : 'Not Found';
+                
                 this.setState({
                     current_sailing: {
-                        scheduled_departure: data.current.sailing_time,
-                        actual_departure: data.current.actual_departure,
-                        percent_full: data.current_cond.percent_full,
-                        car_wait: data.current_cond.car_waits,
-                        oversize_wait: data.current_cond.oversize_waits,
-                        vessel: data.current.vessel,
-                        eta: data.current.eta,
-                        status: data.current.status,
-                        updated_at: data.current.updated_at
+                        scheduled_departure: currentScheduledDeparture,
+                        actual_departure: currentActualDeparture,
+                        percent_full: currentPercentFull,
+                        car_wait: currentCarWait,
+                        oversize_wait: currentOversizeWait,
+                        vessel: currentVessel,
+                        eta: currentEta,
+                        status: currentStatus,
+                        updated_at: currentUpdatedAt
                     }, 
                     next_sailing: {
-                        scheduled_departure: data.next.sailing_time,
-                        percent_full: data.next_cond.percent_full,
-                        car_wait: data.next_cond.car_waits,
-                        oversize_wait: data.next_cond.oversize_waits,
-                        vessel: data.next.vessel
+                        scheduled_departure: nextScheduledDeparture,
+                        percent_full: nextPercentFull,
+                        car_wait: nextCarWait,
+                        oversize_wait: nextOversizeWait,
+                        vessel: nextVessel
                     },
                     next_next_sailing: {
-                        scheduled_departure: data.next_next.sailing_time,
-                        percent_full: data.next_cond.next_percent_full,
-                        vessel: data.next_next.vessel
+                        scheduled_departure: nextNextScheduledDeparture,
+                        percent_full: nextNextPercentFull,
+                        vessel: nextNextVessel
                     }
             });
         });
