@@ -150,12 +150,6 @@ sailingData = (tableNum) => {
                         status: sailings[4] || null
                     }
 
-                    // console.log(date)
-                    // console.log(departure)
-                    // console.log(arrival)
-                    // console.log(sailings[1])
-                    // console.log(sailings[0])
-
                     Sailing.where({
                             sailing_date: date,
                             departure_terminal: departure,

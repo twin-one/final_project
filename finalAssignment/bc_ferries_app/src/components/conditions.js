@@ -45,7 +45,6 @@ class Conditions extends Component {
         axios.get(url)
             .then(response => {
                 let data = response.data;
-                console.log("Check out this data", data);
                 
                 let currentScheduledDeparture = data.current ? data.current.sailing_time : 'Not Found';
                 let currentActualDeparture = data.current ? data.current.actual_departure : 'Not Found';
@@ -69,8 +68,8 @@ class Conditions extends Component {
                 
                 this.setState({
                     current_sailing: {
-                        scheduled_departure: currentScheduledDeparture,
-                        actual_departure: currentActualDeparture,
+                        scheduled_departure: this.time(currentScheduledDeparture),
+                        actual_departure: this.time(currentActualDeparture),
                         percent_full: currentPercentFull,
                         car_wait: currentCarWait,
                         oversize_wait: currentOversizeWait,
@@ -80,14 +79,14 @@ class Conditions extends Component {
                         updated_at: currentUpdatedAt
                     }, 
                     next_sailing: {
-                        scheduled_departure: nextScheduledDeparture,
+                        scheduled_departure: this.time(nextScheduledDeparture),
                         percent_full: nextPercentFull,
                         car_wait: nextCarWait,
                         oversize_wait: nextOversizeWait,
                         vessel: nextVessel
                     },
                     next_next_sailing: {
-                        scheduled_departure: nextNextScheduledDeparture,
+                        scheduled_departure: this.time(nextNextScheduledDeparture),
                         percent_full: nextNextPercentFull,
                         vessel: nextNextVessel
                     }
@@ -97,10 +96,15 @@ class Conditions extends Component {
 
     setDate = () => {
         let date = new Date();
-        let todaysDate = moment(date).format('YYYY-MM-DD HH:mm a');
+        let todaysDate = moment(date).format('YYYY-MM-DD h:mm a');
         this.setState({
             update: todaysDate
         })
+    }
+
+    time = (time) => {
+        time = moment(moment(this.state.update).format('YYYY-MM-DD') + ' ' + time).format('h:mm a')
+        return(time)
     }
 
     setRoute = () => {
@@ -135,7 +139,7 @@ class Conditions extends Component {
                         <div className='card'>
                             <h5>Current Sailing</h5>
                             <p>Last Refresh: {this.state.update}</p>
-                            <p>Last Updated: {moment(this.state.current_sailing.updated_at).format('YYYY-MM-DD HH:mm a')}</p>
+                            <p>Last Updated: {moment(this.state.current_sailing.updated_at).format('YYYY-MM-DD h:mm a')}</p>
                             <hr/>
                             <table className='striped'>
                                 <tbody>
@@ -164,7 +168,7 @@ class Conditions extends Component {
                                         <td>{this.state.current_sailing.vessel}</td>
                                     </tr>
                                     <tr>
-                                        <th>ETA:</th>
+                                        <th>Arrival Time/ETA:</th>
                                         <td>{this.state.current_sailing.eta}</td>  
                                     </tr>
                                     <tr>
