@@ -105,8 +105,8 @@ class Conditions extends Component {
 
     setRoute = () => {
         this.setState({
-            departure_terminal: this.props.match.params.departure,
-            arrival_terminal: this.props.match.params.arrival
+            departure_terminal: this.props.match.params.departure.replace(/-/g, " "),
+            arrival_terminal: this.props.match.params.arrival.replace(/-/g, " ")
         })
     }
 
@@ -122,101 +122,109 @@ class Conditions extends Component {
     render() {
         return(
             <div>
-                <Col s={8} offset='s2'>
-                        <h3>{this.state.departure_terminal} to {this.state.arrival_terminal}</h3>
-                        <Link to='/' className="waves-effect waves-light btn terminalButton">Back To Routes</Link>
-                    <div className='card'>
-                        <h5>Current Sailing</h5>
-                        <p>Last Refresh: {this.state.update}</p>
-                        <p>Last Updated: {this.state.current_sailing.updated_at}</p>
-                        <hr/>
-                        <table className='striped'>
-                            <tbody>
-                                <tr>
-                                    <th>Scheduled Departure:</th>
-                                    <td>{this.state.current_sailing.scheduled_departure}</td>
-                                </tr>
-                                <tr>
-                                    <th>Actual Departure:</th>
-                                    <td>{this.state.current_sailing.actual_departure}</td>
-                                </tr>
-                                <tr>
-                                    <th>Percent Full:</th>
-                                    <td>{this.state.current_sailing.percent_full}</td>
-                                </tr>
-                                <tr>
-                                    <th>Car Wait:</th>
-                                    <td>{this.state.current_sailing.car_wait}</td> 
-                                </tr>
-                                <tr>
-                                    <th>Oversize Wait:</th>
-                                    <td>{this.state.current_sailing.oversize_wait}</td> 
-                                </tr>
-                                <tr>    
-                                    <th>Vessel:</th>
-                                    <td>{this.state.current_sailing.vessel}</td>
-                                </tr>
-                                <tr>
-                                    <th>ETA:</th>
-                                    <td>{this.state.current_sailing.eta}</td>  
-                                </tr>
-                                <tr>
-                                    <th>Status:</th>
-                                    <td>{this.state.current_sailing.status}</td>  
-                                </tr>
-                            </tbody>    
-                        </table>
+                <Col m={8} offset='m2'>
+                    <div className="row">
+                        <div className="col m8">
+                            <h3>{this.state.departure_terminal} to {this.state.arrival_terminal}</h3>
+                        </div>
+                        <div className="col m4">
+                            <Link to='/' className="waves-effect waves-light btn terminalButton backButton">Back To Routes</Link>
+                        </div>
                     </div>
-                    <div className='card'>
-                        <h5>Next Sailing</h5>
-                        <p>Last Update: {this.state.update}</p>
-                        <hr/>
-                        <table className='striped'>
-                            <tbody>
-                                <tr>
-                                    <th>Scheduled Departure:</th>
-                                    <td>{this.state.next_sailing.scheduled_departure}</td>
-                                </tr>
-                                <tr>
-                                    <th>Percent Full:</th>
-                                    <td>{this.state.next_sailing.percent_full}</td>
-                                </tr>
-                                <tr>
-                                    <th>Car Wait:</th>
-                                    <td>{this.state.next_sailing.car_wait}</td> 
-                                </tr>
-                                <tr>
-                                    <th>Oversize Wait:</th>
-                                    <td>{this.state.next_sailing.oversize_wait}</td> 
-                                </tr>
-                                <tr>    
-                                    <th>Vessel:</th>
-                                    <td>{this.state.next_sailing.vessel}</td>
-                                </tr>
-                            </tbody>    
-                        </table>
-                    </div>
-                    <div className='card'>
-                        <h5>Next Next Sailing</h5>
-                        <p>Last Update: {this.state.update}</p>
-                        <hr/>
-                        <Table striped>
-                            <tbody>
-                                <tr>
-                                    <th>Scheduled Departure:</th>
-                                    <td>{this.state.next_next_sailing.scheduled_departure}</td>
-                                </tr>
-                                <tr>
-                                    <th>Percent Full:</th>
-                                    <td>{this.state.next_next_sailing.percent_full}</td>
-                                </tr>
-                                <tr>    
-                                    <th>Vessel:</th>
-                                    <td>{this.state.next_next_sailing.vessel}</td>
-                                </tr>
-                            </tbody>
-                        </Table>
-                    </div>
+                    <div className="row">
+                        <div className='card'>
+                            <h5>Current Sailing</h5>
+                            <p>Last Refresh: {this.state.update}</p>
+                            <p>Last Updated: {this.state.current_sailing.updated_at}</p>
+                            <hr/>
+                            <table className='striped'>
+                                <tbody>
+                                    <tr>
+                                        <th>Scheduled Departure:</th>
+                                        <td>{this.state.current_sailing.scheduled_departure}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Actual Departure:</th>
+                                        <td>{this.state.current_sailing.actual_departure}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Percent Full:</th>
+                                        <td>{this.state.current_sailing.percent_full}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Car Wait:</th>
+                                        <td>{this.state.current_sailing.car_wait}</td> 
+                                    </tr>
+                                    <tr>
+                                        <th>Oversize Wait:</th>
+                                        <td>{this.state.current_sailing.oversize_wait}</td> 
+                                    </tr>
+                                    <tr>    
+                                        <th>Vessel:</th>
+                                        <td>{this.state.current_sailing.vessel}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>ETA:</th>
+                                        <td>{this.state.current_sailing.eta}</td>  
+                                    </tr>
+                                    <tr>
+                                        <th>Status:</th>
+                                        <td>{this.state.current_sailing.status}</td>  
+                                    </tr>
+                                </tbody>    
+                            </table>
+                        </div>
+                        <div className='card'>
+                            <h5>Next Sailing</h5>
+                            <p>Last Update: {this.state.update}</p>
+                            <hr/>
+                            <table className='striped'>
+                                <tbody>
+                                    <tr>
+                                        <th>Scheduled Departure:</th>
+                                        <td>{this.state.next_sailing.scheduled_departure}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Percent Full:</th>
+                                        <td>{this.state.next_sailing.percent_full}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Car Wait:</th>
+                                        <td>{this.state.next_sailing.car_wait}</td> 
+                                    </tr>
+                                    <tr>
+                                        <th>Oversize Wait:</th>
+                                        <td>{this.state.next_sailing.oversize_wait}</td> 
+                                    </tr>
+                                    <tr>    
+                                        <th>Vessel:</th>
+                                        <td>{this.state.next_sailing.vessel}</td>
+                                    </tr>
+                                </tbody>    
+                            </table>
+                        </div>
+                        <div className='card'>
+                            <h5>Next Next Sailing</h5>
+                            <p>Last Update: {this.state.update}</p>
+                            <hr/>
+                            <Table striped>
+                                <tbody>
+                                    <tr>
+                                        <th>Scheduled Departure:</th>
+                                        <td>{this.state.next_next_sailing.scheduled_departure}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Percent Full:</th>
+                                        <td>{this.state.next_next_sailing.percent_full}</td>
+                                    </tr>
+                                    <tr>    
+                                        <th>Vessel:</th>
+                                        <td>{this.state.next_next_sailing.vessel}</td>
+                                    </tr>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </div>    
                 </Col>
             </div>    
         )

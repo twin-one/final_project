@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const knexConfig = require('./knexfile');
 const knex = require('knex')(knexConfig);
 const bookshelf = require('bookshelf')(knex);
+var CronJob = require('cron').CronJob;
 
 //Bookshelf model for Sailings
 const Sailing = bookshelf.Model.extend({
@@ -191,16 +192,7 @@ sailingData = (tableNum) => {
     });
 }
 
-// sailingData(6);
-// sailingData(26);
-// sailingData(34);
-sailingData(42);
-// conditionsData(8);
-// conditionsData(13);
-// conditionsData(23);
-// conditionsData(28);
-
-// setInterval(getData => {
+// var job = new CronJob('* * * * *', function() {
 //     sailingData(6);
 //     sailingData(26);
 //     sailingData(34);
@@ -209,4 +201,17 @@ sailingData(42);
 //     conditionsData(13);
 //     conditionsData(23);
 //     conditionsData(28);
-// }, 300000)
+//     }, 
+//     true, 
+//     timeZone: 'America/Los_Angeles')
+
+new CronJob('300 * 6-24 * * *', function() {
+    sailingData(6);
+    sailingData(26);
+    sailingData(34);
+    sailingData(42);
+    conditionsData(8);
+    conditionsData(13);
+    conditionsData(23);
+    conditionsData(28);
+      }, null, true, 'America/Los_Angeles');
