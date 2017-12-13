@@ -55,7 +55,7 @@ class Conditions extends Component {
                 let currentVessel = data.current ? data.current.vessel : 'Not Found';
                 let currentEta = data.current ? data.current.eta : 'Not Found';
                 let currentStatus = data.current ? data.current.status : 'Not Found';
-                let currentUpdatedAt = data.current ? data.current.updated_at : 'Not Found';
+                let currentUpdatedAt = data.next_cond ? data.next_cond.created_at : 'Not Found';
 
                 let nextScheduledDeparture = data.next ? data.next.sailing_time : 'Not Found';
                 let nextPercentFull = data.next_cond ? data.next_cond.percent_full : 'Not Found';
@@ -97,7 +97,7 @@ class Conditions extends Component {
 
     setDate = () => {
         let date = new Date();
-        let todaysDate = moment(date).format('YYYY-MM-DD HH:mm');
+        let todaysDate = moment(date).format('YYYY-MM-DD HH:mm a');
         this.setState({
             update: todaysDate
         })
@@ -135,7 +135,7 @@ class Conditions extends Component {
                         <div className='card'>
                             <h5>Current Sailing</h5>
                             <p>Last Refresh: {this.state.update}</p>
-                            <p>Last Updated: {this.state.current_sailing.updated_at}</p>
+                            <p>Last Updated: {moment(this.state.current_sailing.updated_at).format('YYYY-MM-DD HH:mm a')}</p>
                             <hr/>
                             <table className='striped'>
                                 <tbody>
