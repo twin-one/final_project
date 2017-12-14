@@ -105,10 +105,11 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
 });
 
 app.get('*', (res, req) => {
-    res.sendFile(__dirname + '/bc_ferries_app/build/index.html')
+    res.sendFile('index.html', {root: __dirname + '/bc_ferries_app/build/index.html'})
 })
 
 //Server listen function
-app.listen(8080, ()=>{
-    console.log('listening on port 8080')
+app.listen(process.env.PORT || 8080, ()=>{
+    console.log(`Server Started on Port ${process.env.PORT || 8080}`);
+    console.log('Press CTRL + C to stop server');
 })
