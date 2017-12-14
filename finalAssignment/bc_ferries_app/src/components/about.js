@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Button} from 'react-materialize';
+import {Row} from 'react-materialize';
 
 class About extends Component {
     render() {

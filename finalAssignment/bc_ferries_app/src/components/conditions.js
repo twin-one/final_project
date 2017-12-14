@@ -124,6 +124,7 @@ class Conditions extends Component {
     }
 
     render() {
+        setInterval(this.getCurrentSailingData(), 300000)
         return(
             <div>
                 <Col m={8} offset='m2'>
