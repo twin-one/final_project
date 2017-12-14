@@ -34,6 +34,8 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.static(__dirname + '/bc_ferries_app/build'));
+
 app.get('/conditions/:departure/:arrival', (req, res) => {
     let departure = req.params.departure.replace(/-/g, " ");
     let arrival = req.params.arrival.replace(/-/g, " "); 
@@ -101,6 +103,10 @@ app.get('/conditions/:departure/:arrival', (req, res) => {
             })
         })        
 });
+
+app.get('*', (res, req) => {
+    res.sendFile(__dirname + '/bc_ferries_app/build/index.html')
+})
 
 //Server listen function
 app.listen(8080, ()=>{
